@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "815454507609",
+    "project_id": "temperatureguide",
+    "storage_bucket": "temperatureguide.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:815454507609:android:67b9d3aeb84fe0cf801748",
+        "android_client_info": {
+          "package_name": "ch.zli.TempGuide"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "815454507609-4pp4u2liv5pn7kcpllvfkqig95t08jn1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC75geD49S6USUHST1UjEtVw7jifcTixx0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "815454507609-4pp4u2liv5pn7kcpllvfkqig95t08jn1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
