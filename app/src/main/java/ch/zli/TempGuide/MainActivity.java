@@ -111,8 +111,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         coldCutoff = sp.getInt("coldBar", 0);
         heatCutoff = sp.getInt("heatBar", 0);
-        coldMessage = sp.getString("cold", "no Cold message");
-        heatMessage = sp.getString("heat", "no Heat message");
+        coldMessage = sp.getString("cold", "it's cold, you should get a blanket!");
+        heatMessage = sp.getString("heat", "it's hot, you should get a water bottle!");
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_launcher_background)
