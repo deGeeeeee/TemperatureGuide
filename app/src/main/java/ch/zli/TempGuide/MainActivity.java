@@ -15,6 +15,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -37,8 +38,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     private String heatMessage;
     private String coldMessage;
-    private String heatImageKey;
-    private String coldImageKey;
     private int coldCutoff;
     private int heatCutoff;
     private TextView tempView;
@@ -46,12 +45,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private Sensor tempSensor;
     private boolean tempSensorAvailability;
     private Button settingsButton;
-    private Drawable background;
     private ConstraintLayout layout;
     private Context context;
-    private StorageReference mStorageRef;
     private int state;
     private SharedPreferences sp;
+    private static final String CHANNEL_ID = "defaultChannel";
+    private static final String CHANNEL_NAME = "Default Channel";
+    private NotificationManager notificationManager;
+    private double temperature;
 
 
 
@@ -65,14 +66,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         settingsButton = findViewById(R.id.SettingsButton);
         layout = findViewById(R.id.background);
         context = getBaseContext();
-        mStorageRef = FirebaseStorage.getInstance().getReference();
         state = 1;
 
         sp = getSharedPreferences("pref", Activity.MODE_PRIVATE);
-        coldCutoff = sp.getInt("coldbar", 0);
+        coldCutoff = sp.getInt("coldBar", 0);
         heatCutoff = sp.getInt("heatBar", 0);
-        coldMessage = sp.getString("cold", "no Cold message");
-        heatMessage = sp.getString("heat", "no Heat message");
 
         settingsButton.setOnClickListener(v -> {
             openSettings();
@@ -88,18 +86,20 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             tempSensorAvailability=false;
         }
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel("My Notification", "My notification", NotificationManager.IMPORTANCE_DEFAULT);
+        this.notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
+            notificationManager.createNotificationChannel(channel);
         }
 
-        NotificationCompat.Builder builder =  new NotificationCompat.Builder(MainActivity.this, "blabla");
-        NotificationManagerCompat managerCompat =  NotificationManagerCompat.from(MainActivity.this);
-        builder.setContentText("test");
-        builder.setContentTitle("title");
-        builder.setSmallIcon(R.drawable.ic_launcher_background);
-        managerCompat.notify(1, builder.build());
+        state = 1;
+        tempView.setTextColor(Color.BLACK);
+        setBackgroundImage("grass");
+        temperature=15;
+        tempView.setText(temperature+"C");
 
     }
+
 
     public void openSettings() {
         Intent intent = new Intent(this, SettingsActivity.class);
@@ -108,31 +108,43 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
-        NotificationCompat.Builder builder =  new NotificationCompat.Builder(MainActivity.this, "blabla");
-        NotificationManagerCompat managerCompat =  NotificationManagerCompat.from(MainActivity.this);
-        builder.setContentText("test");
-        builder.setSmallIcon(R.drawable.ic_launcher_background);
-        double temperature = sensorEvent.values[0];
+
+        coldCutoff = sp.getInt("coldBar", 0);
+        heatCutoff = sp.getInt("heatBar", 0);
+        coldMessage = sp.getString("cold", "no Cold message");
+        heatMessage = sp.getString("heat", "no Heat message");
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_launcher_background)
+                .setContentTitle("TempGuide")
+                .setContentText("TempGuide is now online!")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+        temperature = sensorEvent.values[0];
         tempView.setText(temperature+"C");
-        if(temperature <= 0) {
+        if(temperature <= coldCutoff) {
             if(state != 0) {
                 state = 0;
+                tempView.setTextColor( Color. rgb(255, 100, 0));
                 builder.setContentText(coldMessage);
-                managerCompat.notify(1, builder.build());
+                notificationManager.notify(1, builder.build());
             }
             setBackgroundImage("ice");
-        } else if (temperature >= 30) {
+        } else if (temperature >= 25+heatCutoff) {
             if(state != 2) {
                 state = 2;
+                tempView.setTextColor(Color.CYAN);
                 builder.setContentText(heatMessage);
-                managerCompat.notify(1, builder.build());
+                notificationManager.notify(1, builder.build());
             }
             setBackgroundImage("fire");
         } else {
             if(state != 1) {
                 state = 1;
+                tempView.setTextColor(Color.BLACK);
+
             }
-            layout.setBackground(null);
+            setBackgroundImage("grass");
         }
     }
 

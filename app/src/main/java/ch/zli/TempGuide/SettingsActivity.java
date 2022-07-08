@@ -43,8 +43,8 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         sp = getSharedPreferences("pref", Activity.MODE_PRIVATE);
         coldMessageView.setText(sp.getString("cold", "it's cold, you should get a blanket!"));
         heatMessageView.setText(sp.getString("heat", "it's hot, you should get a water bottle!"));
-        coldBar.setProgress(sp.getInt("coldbar", 0));
-        heatBar.setProgress(sp.getInt("heatbar", 0));
+        coldBar.setProgress(sp.getInt("coldBar", 0));
+        heatBar.setProgress(sp.getInt("heatBar", 0));
 
 
 
@@ -57,8 +57,8 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         SharedPreferences.Editor editor = sp.edit();
         editor.putString("cold", coldMessageView.getText().toString());
         editor.putString("heat", heatMessageView.getText().toString());
-        editor.putInt("coldbar", coldBar.getProgress());
-        editor.putInt("heatbar", heatBar.getProgress());
+        editor.putInt("coldBar", coldBar.getProgress());
+        editor.putInt("heatBar", heatBar.getProgress());
         editor.apply();
     }
 

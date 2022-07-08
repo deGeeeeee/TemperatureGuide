@@ -8,13 +8,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:foregroundTint="#656565"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:theme="@style/CardView.Dark">
 
     <TextView
         android:id="@+id/tempView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Hello World!"
+        android:textSize="28sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -24,10 +26,12 @@
         android:id="@+id/SettingsButton"
         android:layout_width="161dp"
         android:layout_height="70dp"
-        android:backgroundTint="#454545"
         android:layout_marginTop="-10dp"
+        android:backgroundTint="#2196F3"
         android:bufferType="normal"
         android:text="Settings"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#03A9F4"
         app:icon="@drawable/smol_cog"
         app:iconTint="#FFFFFF"
         app:layout_constraintStart_toStartOf="parent"
